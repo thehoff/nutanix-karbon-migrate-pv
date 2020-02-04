@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: migration-test-deployment
+    labels:
+        app: pv
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pv
+    template:
+     metadata:
+        labels:
+         app: pv
+     spec:
+        volumes:
+        - name: volume-migration-test
+          persistentVolumeClaim:
+            claimName: pvc-migration-test
+        containers:
+        - name: task-pv-container
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: "http-server"
+          volumeMounts:
+            - mountPath: "/pvc"
+              name: volume-migration-test
